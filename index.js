@@ -3,12 +3,18 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const app = express();
 
+// Setup dummy Express server to keep the service alive on Render
+const PORT = process.env.PORT || 3000;
+app.get('/', (req, res) => res.send('🤖 CryptoTradingBot is running.'));
+app.listen(PORT, () => console.log(`🌐 Web server running on port ${PORT}`));
+
+// Create Telegram bot with polling
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
+// Step 1: When user types /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
 
-  // Step 1 message
   bot.sendMessage(
     chatId,
     `
@@ -16,8 +22,9 @@ bot.onText(/\/start/, (msg) => {
 - 📊 Automate crypto trading
 - ⏰ Monitor markets 24/7
 - 💸 Earn while you sleep
+
 ✅ No experience needed!
-  `,
+    `,
     {
       parse_mode: 'Markdown',
       reply_markup: {
@@ -29,17 +36,20 @@ bot.onText(/\/start/, (msg) => {
   );
 });
 
-// When user taps START
+// Step 2: When user taps "👉 START"
 bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+
   if (msg.text === '👉 START') {
     bot.sendMessage(
-      msg.chat.id,
+      chatId,
       `
-🚀 Using *AutoTrader Bot*, you can finally automate your crypto trades...
-Unlike stock markets, crypto runs *24/7*. Let automation earn while you sleep.
+🚀 Using *AutoTrader Bot*, you can finally automate your crypto trades.
 
-Are you ready?
-    `,
+Unlike the stock market, crypto runs *24/7*. Let automation help you earn while you sleep.
+
+*Are you ready?*
+      `,
       {
         parse_mode: 'Markdown',
         reply_markup: {
@@ -47,7 +57,7 @@ Are you ready?
             [
               {
                 text: '🔥 OPEN CRYPTOTRADING BOT',
-                web_app: { url: process.env.WEB_APP_URL },
+                web_app: { url: process.env.WEB_APP_URL }, // Your Mini App URL
               },
             ],
           ],
