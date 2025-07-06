@@ -28,9 +28,14 @@ bot.onText(/\/start/, (msg) => {
     {
       parse_mode: 'Markdown',
       reply_markup: {
-        keyboard: [['👉 START']],
-        resize_keyboard: true,
-        one_time_keyboard: true,
+        inline_keyboard: [
+          [
+            {
+              text: '👉 START',
+              callback_data: 'start_bot',
+            },
+          ],
+        ],
       },
     }
   );
@@ -44,7 +49,7 @@ bot.on('message', (msg) => {
     bot.sendMessage(
       chatId,
       `
-🚀 Using *AutoTrader Bot*, you can finally automate your crypto trades.
+🚀 How does $1000 per day with Automated Trading Robots sound?.
 
 Unlike the stock market, crypto runs *24/7*. Let automation help you earn while you sleep.
 
